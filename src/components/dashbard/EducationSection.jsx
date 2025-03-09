@@ -50,9 +50,15 @@ const EducationSection = () => {
         setIsLoading(true);
         try {
             const data = await getAllEducations();
-            setEducations(data);
+            if (Array.isArray(data)) {
+                setEducations(data);
+            } else {
+                console.error(data.message || "Unexpected response format");
+                setEducations([]);
+            }
         } catch (error) {
             console.error("Failed to fetch educations:", error);
+            setEducations([]);
         } finally {
             setIsLoading(false);
         }
@@ -302,7 +308,12 @@ const EducationSection = () => {
                             >
                                 <PenIcon className="h-4 w-4" />
                             </Button>
-                            <Dialog>
+                            <Dialog
+                                open={deleteItemId === education._id}
+                                onOpenChange={(open) => {
+                                    if (!open) setDeleteItemId(null);
+                                }}
+                            >
                                 <DialogTrigger asChild>
                                     <Button
                                         variant="destructive"

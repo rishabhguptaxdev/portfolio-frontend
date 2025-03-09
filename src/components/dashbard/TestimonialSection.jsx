@@ -40,9 +40,15 @@ const TestimonialSection = () => {
         setIsLoading(true);
         try {
             const data = await getAllTestimonials();
-            setTestimonials(data);
+            if (Array.isArray(data)) {
+                setTestimonials(data);
+            } else {
+                console.error(data.message || "Unexpected response format");
+                setTestimonials([]);
+            }
         } catch (error) {
             console.error("Failed to fetch testimonials:", error);
+            setTestimonials([]);
         } finally {
             setIsLoading(false);
         }
@@ -182,6 +188,10 @@ const TestimonialSection = () => {
                                 src={testimonial.clientAvatarURL}
                                 alt="Client Avatar"
                                 className="w-16 h-16 rounded-full"
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    // e.target.src = "/path/to/fallback-avatar.png"; // Ensure you have a valid fallback image
+                                }}
                             />
                         </CardContent>
                         <CardFooter className="flex justify-end space-x-2">
@@ -192,7 +202,12 @@ const TestimonialSection = () => {
                             >
                                 <PenIcon className="h-4 w-4" />
                             </Button>
-                            <Dialog>
+                            <Dialog
+                                open={deleteItemId === testimonial._id}
+                                onOpenChange={(open) => {
+                                    if (!open) setDeleteItemId(null);
+                                }}
+                            >
                                 <DialogTrigger asChild>
                                     <Button
                                         variant="destructive"

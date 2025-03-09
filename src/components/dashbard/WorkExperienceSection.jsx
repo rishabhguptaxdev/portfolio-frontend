@@ -51,9 +51,15 @@ const WorkExperienceSection = () => {
         setIsLoading(true);
         try {
             const data = await getAllWorkExperiences();
-            setWorkExperiences(data);
+            if (Array.isArray(data)) {
+                setWorkExperiences(data);
+            } else {
+                console.error(data.message || "Unexpected response format");
+                setWorkExperiences([]);
+            }
         } catch (error) {
             console.error("Failed to fetch work experiences:", error);
+            setWorkExperiences([]);
         } finally {
             setIsLoading(false);
         }
@@ -307,7 +313,12 @@ const WorkExperienceSection = () => {
                             <Button variant="ghost" size="icon" onClick={() => handleEdit(workExp)}>
                                 <PenIcon className="h-4 w-4" />
                             </Button>
-                            <Dialog>
+                            <Dialog
+                                open={deleteItemId === workExp._id}
+                                onOpenChange={(open) => {
+                                    if (!open) setDeleteItemId(null);
+                                }}
+                            >
                                 <DialogTrigger asChild>
                                     <Button
                                         variant="destructive"

@@ -40,9 +40,15 @@ const AboutSection = () => {
         setIsLoading(true);
         try {
             const data = await getAllAbouts();
-            setAbouts(data);
+            if (Array.isArray(data)) {
+                setAbouts(data);
+            } else {
+                console.error(data.message || "Unexpected response format");
+                setAbouts([]);
+            }
         } catch (error) {
             console.error("Failed to fetch abouts:", error);
+            setAbouts([]);
         } finally {
             setIsLoading(false);
         }
@@ -222,7 +228,12 @@ const AboutSection = () => {
                             <Button variant="ghost" size="icon" onClick={() => handleEdit(about)}>
                                 <PenIcon className="h-4 w-4" />
                             </Button>
-                            <Dialog>
+                            <Dialog
+                                open={deleteItemId === about._id}
+                                onOpenChange={(open) => {
+                                    if (!open) setDeleteItemId(null);
+                                }}
+                            >
                                 <DialogTrigger asChild>
                                     <Button
                                         variant="destructive"

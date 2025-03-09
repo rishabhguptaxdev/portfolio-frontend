@@ -45,9 +45,15 @@ const ProjectSection = () => {
         setIsLoading(true);
         try {
             const data = await getAllProjects();
-            setProjects(data);
+            if (Array.isArray(data)) {
+                setProjects(data);
+            } else {
+                console.error(data.message || "Unexpected response format");
+                setProjects([]);
+            }
         } catch (error) {
             console.error("Failed to fetch projects:", error);
+            setProjects([]);
         } finally {
             setIsLoading(false);
         }
@@ -292,7 +298,12 @@ const ProjectSection = () => {
                             <Button variant="ghost" size="icon" onClick={() => handleEdit(project)}>
                                 <PenIcon className="h-4 w-4" />
                             </Button>
-                            <Dialog>
+                            <Dialog
+                                open={deleteItemId === project._id}
+                                onOpenChange={(open) => {
+                                    if (!open) setDeleteItemId(null);
+                                }}
+                            >
                                 <DialogTrigger asChild>
                                     <Button
                                         variant="destructive"
