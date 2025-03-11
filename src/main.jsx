@@ -3,9 +3,15 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
 import "tailwindcss";
+import store from "./store/store";
+import { Provider } from "react-redux";
+import { Toaster } from "@/components/ui/sonner";
 
 createRoot(document.getElementById("root")).render(
     <StrictMode>
-        <App />
+        <Provider store={store}>
+            <App />
+            <Toaster />
+        </Provider>
     </StrictMode>
 );

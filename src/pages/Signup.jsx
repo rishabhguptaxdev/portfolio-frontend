@@ -6,6 +6,7 @@ import { setToken } from "../utils/helper";
 
 const Signup = () => {
     const [name, setName] = useState("");
+    const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -46,6 +47,16 @@ const Signup = () => {
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 mb-2">Username</label>
+                    <input
+                        type="username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                         className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         required
                     />

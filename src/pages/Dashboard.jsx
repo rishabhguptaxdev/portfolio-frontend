@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserDetails } from "@/store/userSlice";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { removeToken } from "../utils/helper";
@@ -7,9 +9,15 @@ import WorkExperienceSection from "../components/dashbard/WorkExperienceSection"
 import TestimonialSection from "../components/dashbard/TestimonialSection";
 import ProjectSection from "../components/dashbard/ProjectSection";
 import EducationSection from "../components/dashbard/EducationSection";
+import GoLiveCard from "../components/dashbard/GoLiveCard";
 
 const Dashboard = () => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        dispatch(fetchUserDetails());
+    }, [dispatch]);
 
     const handleLogout = () => {
         removeToken();
@@ -28,6 +36,7 @@ const Dashboard = () => {
                 <TestimonialSection />
                 <ProjectSection />
                 <EducationSection />
+                <GoLiveCard />
             </div>
         </div>
     );
