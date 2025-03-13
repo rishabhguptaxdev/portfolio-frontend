@@ -1,50 +1,149 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Loader from "../components/ui/Loader";
-// Assume this service fetches a user's portfolio by username.
-import { getUserPortfolio } from "../services/user";
+import HeroSection from "../components/profile/HeroSection";
+import AboutSection from "../components/profile/AboutSection";
+import WorkExperienceSection from "../components/profile/WorkExperienceSection";
+import TestimonialsSection from "../components/profile/TestimonialsSection";
+import ProjectsSection from "../components/profile/ProjectsSection";
+import EducationSection from "../components/profile/EducationSection";
+import ContactSection from "../components/profile/ContactSection";
+import ResumeDownloadSection from "../components/profile/ResumeDownloadSection";
+import { getProfileByUsername } from "@/services/profile";
+import { motion } from "framer-motion"; // For animations
 
 const Profile = () => {
     const { username } = useParams();
-    const [portfolio, setPortfolio] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [profile, setProfile] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
     useEffect(() => {
-        const fetchPortfolio = async () => {
-            setIsLoading(true);
+        const fetchProfile = async () => {
             try {
-                const data = await getUserPortfolio(username);
-                // Only show portfolio if it is marked live.
-                if (data && data.isPortfolioLive) {
-                    setPortfolio(data);
-                } else {
-                    setError("Portfolio is not live or not found.");
+                setLoading(true);
+                const data = await getProfileByUsername(username);
+                if (!data.success) {
+                    throw new Error(data.message || "Profile not found");
                 }
+                setProfile(data.profile);
             } catch (err) {
                 console.error(err);
-                setError("Error fetching portfolio.");
+                setError(err.message || "An error occurred");
             } finally {
-                setIsLoading(false);
+                setLoading(false);
             }
         };
-
-        fetchPortfolio();
+        fetchProfile();
     }, [username]);
 
-    if (isLoading) return <Loader />;
-    if (error) return <p className="p-4 text-center">{error}</p>;
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <Loader />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <p className="text-red-500 text-lg">{error}</p>
+            </div>
+        );
+    }
+
+    const aboutData =
+        Array.isArray(profile.about) && profile.about.length > 0 ? profile.about[0] : null;
 
     return (
-        <div className="p-8">
-            <h1 className="text-3xl font-bold mb-4">{portfolio.name}'s Portfolio</h1>
-            {/* Render portfolio details (About, Work, Projects, etc.) */}
-            {/* For example: */}
-            <div>
-                <h2>About</h2>
-                <p>{portfolio.about && portfolio.about.introductionContent}</p>
-                {/* Add more sections as needed */}
-            </div>
+        <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">
+            {/* Hero Section */}
+            <motion.section
+                id="hero"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+            >
+                <HeroSection profile={profile.user} about={aboutData} />
+            </motion.section>
+
+            {/* About Section */}
+            <motion.section
+                id="about"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+            >
+                <AboutSection about={aboutData} />
+            </motion.section>
+
+            {/* Work Experience Section */}
+            <motion.section
+                id="work"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+            >
+                <WorkExperienceSection experiences={profile.workExperience} />
+            </motion.section>
+
+            {/* Projects Section */}
+            <motion.section
+                id="projects"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+            >
+                <ProjectsSection projects={profile.projects} />
+            </motion.section>
+
+            {/* Education Section */}
+            <motion.section
+                id="education"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+            >
+                <EducationSection education={profile.education} />
+            </motion.section>
+
+            {/* Testimonials Section */}
+            <motion.section
+                id="testimonials"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+            >
+                <TestimonialsSection testimonials={profile.testimonials} />
+            </motion.section>
+
+            {/* Contact Section */}
+            <motion.section
+                id="contact"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+            >
+                <ContactSection />
+            </motion.section>
+
+            {/* Resume Download Section */}
+            <motion.section
+                id="resume"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+            >
+                <ResumeDownloadSection resumeUrl={aboutData?.resumeUrl} />
+            </motion.section>
         </div>
     );
 };
