@@ -4,13 +4,13 @@ import Loader from "../components/ui/Loader";
 import HeroSection from "../components/profile/HeroSection";
 import AboutSection from "../components/profile/AboutSection";
 import WorkExperienceSection from "../components/profile/WorkExperienceSection";
-import TestimonialsSection from "../components/profile/TestimonialsSection";
 import ProjectsSection from "../components/profile/ProjectsSection";
 import EducationSection from "../components/profile/EducationSection";
+import TestimonialsSection from "../components/profile/TestimonialsSection";
 import ContactSection from "../components/profile/ContactSection";
 import ResumeDownloadSection from "../components/profile/ResumeDownloadSection";
 import { getProfileByUsername } from "@/services/profile";
-import { motion } from "framer-motion"; // For animations
+import { motion } from "framer-motion";
 
 const Profile = () => {
     const { username } = useParams();
@@ -39,7 +39,7 @@ const Profile = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
+            <div className="min-h-screen flex items-center justify-center bg-gray-900">
                 <Loader />
             </div>
         );
@@ -47,100 +47,92 @@ const Profile = () => {
 
     if (error) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <p className="text-red-500 text-lg">{error}</p>
+            <div className="min-h-screen flex items-center justify-center bg-gray-900">
+                <p className="text-red-500 text-xl">{error}</p>
             </div>
         );
     }
 
+    // Use the first about object if available
     const aboutData =
         Array.isArray(profile.about) && profile.about.length > 0 ? profile.about[0] : null;
 
     return (
-        <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">
-            {/* Hero Section */}
-            <motion.section
-                id="hero"
+        <div className="bg-gray-900 text-gray-100">
+            <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.7 }}
             >
                 <HeroSection profile={profile.user} about={aboutData} />
-            </motion.section>
-
-            {/* About Section */}
+            </motion.div>
             <motion.section
                 id="about"
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
                 viewport={{ once: true }}
+                className="bg-gray-800"
             >
                 <AboutSection about={aboutData} />
             </motion.section>
-
-            {/* Work Experience Section */}
             <motion.section
                 id="work"
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
                 viewport={{ once: true }}
+                className="bg-gray-700"
             >
                 <WorkExperienceSection experiences={profile.workExperience} />
             </motion.section>
-
-            {/* Projects Section */}
             <motion.section
                 id="projects"
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
                 viewport={{ once: true }}
+                className="bg-gray-800"
             >
                 <ProjectsSection projects={profile.projects} />
             </motion.section>
-
-            {/* Education Section */}
             <motion.section
                 id="education"
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
                 viewport={{ once: true }}
+                className="bg-gray-700"
             >
                 <EducationSection education={profile.education} />
             </motion.section>
-
-            {/* Testimonials Section */}
             <motion.section
                 id="testimonials"
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
                 viewport={{ once: true }}
+                className="bg-gray-800"
             >
                 <TestimonialsSection testimonials={profile.testimonials} />
             </motion.section>
-
-            {/* Contact Section */}
             <motion.section
                 id="contact"
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.5, delay: 0.5 }}
                 viewport={{ once: true }}
+                className="bg-gray-700"
             >
                 <ContactSection />
             </motion.section>
-
-            {/* Resume Download Section */}
             <motion.section
                 id="resume"
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
                 viewport={{ once: true }}
+                className="bg-gray-800"
             >
                 <ResumeDownloadSection resumeUrl={aboutData?.resumeUrl} />
             </motion.section>
